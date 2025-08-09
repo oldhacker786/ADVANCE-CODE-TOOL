@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CODE ENCRYPTOR - OLD-STUDIO</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .input-column {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .input-column:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.1);
+        }
+
+        .language-selector {
+            margin-bottom: 20px;
+        }
+
+        .language-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .language-select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .file-upload {
+            margin-bottom: 20px;
+        }
+
+        .upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .upload-text {
+            color: #6c757d;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .upload-text strong {
+            color: #333;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .file-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .file-info {
+            display: none;
+            background: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .file-name {
+            color: #1976d2;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .clear-file {
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .clear-file:hover {
+            background: #d32f2f;
+            transform: scale(1.1);
+        }
+
+        .code-textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .code-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .code-textarea.output {
+            background: #f8f9fa;
+            color: #495057;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #17a2b8, #6f42c1);
+            color: white;
+        }
+
+        .btn-info:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(23, 162, 184, 0.3);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107, #fd7e14);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 193, 7, 0.3);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 500;
+            display: none;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .brand {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .whatsapp-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .input-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">CODE ENCRYPTOR</h1>
+            <p class="subtitle">SIMPLE & SECURE CODE ENCRYPTION TOOL</p>
+        </div>
+
+        <div class="main-content">
+            <div class="input-group">
+                <div class="input-column">
+                    <div class="section-title">INPUT CODE</div>
+                    
+                    <div class="language-selector">
+                        <select id="codeType" class="language-select">
+                            <option value="html">HTML</option>
+                            <option value="css">CSS</option>
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">PYTHON</option>
+                            <option value="php">PHP</option>
+                            <option value="java">Java</option>
+                            <option value="cpp">C/C++</option>
+                            <option value="csharp">C#</option>
+                            <option value="sql">SQL</option>
+                            <option value="json">JSON</option>
+                            <option value="xml">XML</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="file-upload">
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-icon">📁</div>
+                            <div class="upload-text">
+                                <strong>UPLOAD CODE FILE</strong>
+                                Supports all programming languages
+                            </div>
+                            <input type="file" id="fileInput" class="file-input" accept=".html,.css,.js,.py,.php,.java,.cpp,.c,.cs,.sql,.json,.xml,.txt">
+                        </div>
+                        <div class="file-info" id="fileInfo">
+                            <span class="file-name" id="fileName"></span>
+                            <button class="clear-file" id="clearFile">✕</button>
+                        </div>
+                    </div>
+
+                    <textarea 
+                        id="codeInput" 
+                        class="code-textarea" 
+                        placeholder="Paste your code here or upload a file..."
+                        spellcheck="false"
+                    ></textarea>
+
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="charCount">0</div>
+                            <div class="stat-label">Characters</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="lineCount">0</div>
+                            <div class="stat-label">Lines</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="codeTypeDisplay">NONE</div>
+                            <div class="stat-label">LANGUAGE</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-column">
+                    <div class="section-title">ENCRYPTED OUTPUT</div>
+                    
+                    <textarea 
+                        id="codeOutput" 
+                        class="code-textarea output" 
+                        readonly
+                        placeholder="Encrypted code will appear here..."
+                    ></textarea>
+
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="encryptedSize">0 KB</div>
+                            <div class="stat-label">FILE SIZE</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="compressionRatio">0%</div>
+                            <div class="stat-label">COMPRESSION</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="encryptionLevel">NONE</div>
+                            <div class="stat-label">SECURITY</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button id="encryptBtn" class="btn btn-primary">ENCRYPT CODE</button>
+                <button id="decryptBtn" class="btn btn-secondary">DECRYPT CODE</button>
+                <button id="copyBtn" class="btn btn-info">COPY OUTPUT</button>
+                <button id="downloadBtn" class="btn btn-warning">DOWNLOAD FILE</button>
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>PROCESSING YOUR CODE...</p>
+            </div>
+
+            <div class="status" id="status"></div>
+        </div>
+
+        <div class="footer">
+            <div class="brand">POWERED BY OLD-STUDIO</div>
+            <a href="https://whatsapp.com/channel/0029VbAtNf6Likg7MJqCkp2d" 
+               class="whatsapp-link" 
+               target="_blank">
+                📱 JOIN WHATSAPP CHANNEL 
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let encryptedData = '';
+        let originalData = '';
+        let currentMode = 'encrypt';
+
+        // DOM elements
+        const codeInput = document.getElementById('codeInput');
+        const codeOutput = document.getElementById('codeOutput');
+        const codeType = document.getElementById('codeType');
+        const fileInput = document.getElementById('fileInput');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
+        const clearFile = document.getElementById('clearFile');
+        const encryptBtn = document.getElementById('encryptBtn');
+        const decryptBtn = document.getElementById('decryptBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const loading = document.getElementById('loading');
+        const status = document.getElementById('status');
+        
+        // Stats elements
+        const charCount = document.getElementById('charCount');
+        const lineCount = document.getElementById('lineCount');
+        const codeTypeDisplay = document.getElementById('codeTypeDisplay');
+        const encryptedSize = document.getElementById('encryptedSize');
+        const compressionRatio = document.getElementById('compressionRatio');
+        const encryptionLevel = document.getElementById('encryptionLevel');
+
+        // Advanced encryption function
+        function advancedEncrypt(code, type) {
+            try {
+                // Multi-layer encryption
+                let encrypted = code;
+                
+                // Layer 1: Character substitution
+                encrypted = encrypted
+                    .replace(/</g, '§LT§')
+                    .replace(/>/g, '§GT§')
+                    .replace(/"/g, '§QUOT§')
+                    .replace(/'/g, '§APOS§')
+                    .replace(/\n/g, '§NL§')
+                    .replace(/\r/g, '§CR§')
+                    .replace(/\t/g, '§TAB§')
+                    .replace(/ /g, '§SP§');
+                
+                // Layer 2: Base64 encoding
+                encrypted = btoa(unescape(encodeURIComponent(encrypted)));
+                
+                // Layer 3: Custom cipher
+                let ciphered = '';
+                for (let i = 0; i < encrypted.length; i++) {
+                    const char = encrypted.charCodeAt(i);
+                    const shifted = char + (i % 10) + 5;
+                    ciphered += String.fromCharCode(shifted);
+                }
+                
+                // Layer 4: Final Base64
+                encrypted = btoa(ciphered);
+                
+                // Create executable wrapper
+                const wrapper = `<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Encrypted ${type.toUpperCase()} Code</title>
+    <style>
+        body { 
+            background: linear-gradient(135deg, #667eea, #764ba2); 
+            color: white; 
+            font-family: 'Inter', sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0;
+        }
+        .loader { 
+            text-align: center; 
+            background: white;
+            color: #333;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <script>
+        function decryptAndExecute() {
+            try {
+                let encrypted = "${encrypted}";
+                
+                // Reverse Layer 4
+                let ciphered = atob(encrypted);
+                
+                // Reverse Layer 3
+                let decoded = '';
+                for (let i = 0; i < ciphered.length; i++) {
+                    const char = ciphered.charCodeAt(i);
+                    const shifted = char - (i % 10) - 5;
+                    decoded += String.fromCharCode(shifted);
+                }
+                
+                // Reverse Layer 2
+                decoded = decodeURIComponent(escape(atob(decoded)));
+                
+                // Reverse Layer 1
+                let original = decoded
+                    .replace(/§LT§/g, '<')
+                    .replace(/§GT§/g, '>')
+                    .replace(/§QUOT§/g, '"')
+                    .replace(/§APOS§/g, "'")
+                    .replace(/§NL§/g, '\\n')
+                    .replace(/§CR§/g, '\\r')
+                    .replace(/§TAB§/g, '\\t')
+                    .replace(/§SP§/g, ' ');
+                
+                if ("${type}" === "html") {
+                    document.open();
+                    document.write(original);
+                    document.close();
+                } else {
+                    document.body.innerHTML = '<pre style="color: #333; background: white; padding: 20px; white-space: pre-wrap; word-wrap: break-word; border-radius: 10px; max-width: 90%; max-height: 90%; overflow: auto;">' + original.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</pre>';
+                }
+            } catch (e) {
+                document.body.innerHTML = '<div style="color: #ff4444; text-align: center; background: white; padding: 20px; border-radius: 10px;">DECRYPTION ERROR: ' + e.message + '</div>';
+            }
+        }
+        
+        window.onload = function() {
+            setTimeout(decryptAndExecute, 1500);
+        };
+    <\/script>
+</head>
+<body>
+    <div class="loader">
+        <div class="spinner"></div>
+        <div>Decrypting ${type.toUpperCase()} Code...</div>
+        <div style="font-size: 12px; margin-top: 10px; color: #667eea;">POWERED BY OLD-STUDIO</div>
+    </div>
+</body>
+</html>`;
+                
+                return wrapper;
+            } catch (error) {
+                throw new Error('Encryption failed: ' + error.message);
+            }
+        }
+
+        // Advanced decryption function
+        function advancedDecrypt(encryptedCode) {
+            try {
+                // Extract the encrypted data from the wrapper
+                const match = encryptedCode.match(/let encrypted = "([^"]+)"/);
+                if (!match) {
+                    throw new Error('Invalid encrypted format');
+                }
+                
+                let encrypted = match[1];
+                
+                // Reverse Layer 4
+                let ciphered = atob(encrypted);
+                
+                // Reverse Layer 3
+                let decoded = '';
+                for (let i = 0; i < ciphered.length; i++) {
+                    const char = ciphered.charCodeAt(i);
+                    const shifted = char - (i % 10) - 5;
+                    decoded += String.fromCharCode(shifted);
+                }
+                
+                // Reverse Layer 2
+                decoded = decodeURIComponent(escape(atob(decoded)));
+                
+                // Reverse Layer 1
+                let original = decoded
+                    .replace(/§LT§/g, '<')
+                    .replace(/§GT§/g, '>')
+                    .replace(/§QUOT§/g, '"')
+                    .replace(/§APOS§/g, "'")
+                    .replace(/§NL§/g, '\n')
+                    .replace(/§CR§/g, '\r')
+                    .replace(/§TAB§/g, '\t')
+                    .replace(/§SP§/g, ' ');
+                
+                return original;
+            } catch (error) {
+                throw new Error('Decryption failed: ' + error.message);
+            }
+        }
+
+        // File upload handling
+        function handleFileUpload(file) {
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    codeInput.value = e.target.result;
+                    
+                    // Auto-detect language from file extension
+                    const extension = file.name.split('.').pop().toLowerCase();
+                    const languageMap = {
+                        'html': 'html',
+                        'css': 'css',
+                        'js': 'javascript',
+                        'py': 'python',
+                        'php': 'php',
+                        'java': 'java',
+                        'cpp': 'cpp',
+                        'c': 'cpp',
+                        'cs': 'csharp',
+                        'sql': 'sql',
+                        'json': 'json',
+                        'xml': 'xml'
+                    };
+                    
+                    if (languageMap[extension]) {
+                        codeType.value = languageMap[extension];
+                    }
+                    
+                    // Show file info
+                    fileName.textContent = file.name;
+                    fileInfo.style.display = 'flex';
+                    
+                    updateStats();
+                    showStatus('File uploaded successfully!', 'success');
+                };
+                reader.readAsText(file);
+            }
+        }
+
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileUpload(files[0]);
+            }
+        });
+
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileUpload(e.target.files[0]);
+            }
+        });
+
+        // Clear file
+        clearFile.addEventListener('click', () => {
+            fileInput.value = '';
+            fileInfo.style.display = 'none';
+            codeInput.value = '';
+            updateStats();
+        });
+
+        // Update stats
+        function updateStats() {
+            const code = codeInput.value;
+            const lines = code.split('\n').length;
+            const chars = code.length;
+            const type = codeType.value.toUpperCase();
+            
+            charCount.textContent = chars.toLocaleString();
+            lineCount.textContent = lines.toLocaleString();
+            codeTypeDisplay.textContent = type;
+            
+            if (encryptedData) {
+                const originalSize = new Blob([originalData]).size;
+                const encryptedSizeBytes = new Blob([encryptedData]).size;
+                const ratio = originalSize > 0 ? Math.round((encryptedSizeBytes / originalSize - 1) * 100) : 0;
+                
+                encryptedSize.textContent = (encryptedSizeBytes / 1024).toFixed(2) + ' KB';
+                compressionRatio.textContent = ratio + '%';
+                encryptionLevel.textContent = 'HIGH';
+            }
+        }
+
+        // Show status message
+        function showStatus(message, type = 'success') {
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+            
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 3000);
+        }
+
+        // Encrypt function
+        function encryptCode() {
+            const code = codeInput.value.trim();
+            const type = codeType.value;
+            
+            if (!code) {
+                showStatus('Please enter some code to encrypt!', 'error');
+                return;
+            }
+            
+            loading.style.display = 'block';
+            encryptBtn.disabled = true;
+            
+            setTimeout(() => {
+                try {
+                    originalData = code;
+                    encryptedData = advancedEncrypt(code, type);
+                    codeOutput.value = encryptedData;
+                    currentMode = 'encrypt';
+                    
+                    updateStats();
+                    showStatus('Code encrypted successfully!', 'success');
+                } catch (error) {
+                    showStatus('Encryption error: ' + error.message, 'error');
+                }
+                
+                loading.style.display = 'none';
+                encryptBtn.disabled = false;
+            }, 1000);
+        }
+
+        // Decrypt function
+        function decryptCode() {
+            const code = codeInput.value.trim();
+            
+            if (!code) {
+                showStatus('Please enter encrypted code to decrypt!', 'error');
+                return;
+            }
+            
+            loading.style.display = 'block';
+            decryptBtn.disabled = true;
+            
+            setTimeout(() => {
+                try {
+                    const decrypted = advancedDecrypt(code);
+                    codeOutput.value = decrypted;
+                    encryptedData = decrypted;
+                    currentMode = 'decrypt';
+                    
+                    showStatus('Code decrypted successfully!', 'success');
+                } catch (error) {
+                    showStatus('Decryption error: ' + error.message, 'error');
+                }
+                
+                loading.style.display = 'none';
+                decryptBtn.disabled = false;
+            }, 1000);
+        }
+
+        // Copy to clipboard
+        function copyToClipboard() {
+            if (!codeOutput.value) {
+                showStatus('No output to copy!', 'error');
+                return;
+            }
+            
+            codeOutput.select();
+            document.execCommand('copy');
+            showStatus('Output copied to clipboard!', 'success');
+        }
+
+        // Download file
+        function downloadFile() {
+            if (!codeOutput.value) {
+                showStatus('No output to download!', 'error');
+                return;
+            }
+            
+            const type = codeType.value;
+            const extension = currentMode === 'encrypt' ? 'html' : getFileExtension(type);
+            const filename = `${currentMode}_code_${Date.now()}.${extension}`;
+            
+            const blob = new Blob([codeOutput.value], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+            
+            showStatus('File downloaded: ' + filename, 'success');
+        }
+
+        // Get file extension based on code type
+        function getFileExtension(type) {
+            const extensions = {
+                'html': 'html',
+                'css': 'css',
+                'javascript': 'js',
+                'python': 'py',
+                'php': 'php',
+                'java': 'java',
+                'cpp': 'cpp',
+                'csharp': 'cs',
+                'sql': 'sql',
+                'json': 'json',
+                'xml': 'xml',
+                'other': 'txt'
+            };
+            return extensions[type] || 'txt';
+        }
+
+        // Event listeners
+        encryptBtn.addEventListener('click', encryptCode);
+        decryptBtn.addEventListener('click', decryptCode);
+        copyBtn.addEventListener('click', copyToClipboard);
+        downloadBtn.addEventListener('click', downloadFile);
+        
+        codeInput.addEventListener('input', updateStats);
+        codeType.addEventListener('change', updateStats);
+
+        // Initialize
+        updateStats();
+    </script>
+</body>
+</html>
+
